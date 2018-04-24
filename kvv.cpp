@@ -1,5 +1,3 @@
-// build with: g++ kvv.cpp -o kvv -lcurl -ljsoncpp -lncurses -std=c++11
-
 #include <curl/curl.h>
 #include <string>
 #include <sstream>
