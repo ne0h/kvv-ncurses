@@ -15,16 +15,15 @@ struct Departure {
 
 const string BASE_URL = "https://live.kvv.de/webapp";
 const string API_KEY  = "377d840e54b59adbe53608ba1aad70e8";
-const string STOP_ID  = "de:8212:72";
 
 size_t writeFunction(void *ptr, size_t size, size_t nmemb, std::string* data) {
 	data->append((char*) ptr, size * nmemb);
 	return size * nmemb;
 }
 
-void getDepartures(vector<Departure> &departures) {
+void getDepartures(vector<Departure> &departures, const string &stopId) {
 	stringstream ss;
-	ss << BASE_URL << "/departures/bystop/" << STOP_ID << "?key=" << API_KEY;
+	ss << BASE_URL << "/departures/bystop/" << stopId << "?key=" << API_KEY;
 	ss << "&maxInfos=10";
 
 	auto curl = curl_easy_init();
@@ -62,16 +61,23 @@ void getDepartures(vector<Departure> &departures) {
 	}
 }
 
-int main() {
+int main(int argc, char* argv[]) {
+
+	string stopId = "de:8212:72";
+	string stopName = "Volkswohnungen";
+	if (argc == 3) {
+		stopId = argv[1];
+		stopName = argv[2];
+	}
 
 	initscr();
 	curs_set(0);
 
-	mvprintw(0, 0, "%s", "Haltestelle: Volkswohnungen");
+	mvprintw(0, 0, "%s", stopName.c_str());
 
 	while (1) {
 		vector<Departure> departures;
-		getDepartures(departures);
+		getDepartures(departures, stopId);
 
 		int i = 2;
 		for (const auto &departure : departures) {
