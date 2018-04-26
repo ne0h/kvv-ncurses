@@ -21,7 +21,8 @@ size_t writeFunction(void *ptr, size_t size, size_t nmemb, std::string* data) {
 	return size * nmemb;
 }
 
-void getDepartures(vector<Departure> &departures, const string &stopId) {
+void getDepartures(vector<Departure> &departures, const string &stopId, string &stopName, string &timestamp) {
+
 	stringstream ss;
 	ss << BASE_URL << "/departures/bystop/" << stopId << "?key=" << API_KEY;
 	ss << "&maxInfos=10";
@@ -46,8 +47,8 @@ void getDepartures(vector<Departure> &departures, const string &stopId) {
 	string errors;
 	reader->parse(response.c_str(), response.c_str() + response.size(), &root, &errors);
 
-	const string timestamp = root["timestamp"].asString();
-	const string stopName  = root["stopName"].asString();
+	stopName  = root["stopName"].asString();
+	timestamp = root["timestamp"].asString();
 	auto departures_json = root["departures"];
 
 	for (const auto &departure_json : departures_json) {
@@ -65,22 +66,25 @@ int main(int argc, char* argv[]) {
 	setlocale(LC_ALL, "de_DE.UTF-8");
 
 	string stopId = "de:8212:72";
-	string stopName = "Volkswohnungen";
-	if (argc == 3) {
+	if (argc == 2) {
 		stopId = argv[1];
-		stopName = argv[2];
 	}
 
 	initscr();
 	curs_set(0);
 
-	mvprintw(0, 0, "%s", stopName.c_str());
-
 	while (1) {
 		vector<Departure> departures;
-		getDepartures(departures, stopId);
+		string stopName, timestamp;
 
-		int i = 2;
+		getDepartures(departures, stopId, stopName, timestamp);
+		mvprintw(0, 0, "%s", stopName.c_str());
+
+		stringstream underline;
+		for (int i = 0; i < stopName.length(); i++) {underline << "-";}
+		mvprintw(1, 0, "%s", underline.str().c_str());
+
+		int i = 3;
 		for (const auto &departure : departures) {
 			stringstream ss;
 			ss << departure.route.c_str() << "\t";

@@ -11,6 +11,6 @@ Building
 Usage
 -----
 
-`./kvv stopId stopName`
+`./kvv stopId`
 
 The `stopId` can be obtained by running `curl https://live.kvv.de/webapp/stops/byname/Marktplatz\?key\=377d840e54b59adbe53608ba1aad70e8`.
