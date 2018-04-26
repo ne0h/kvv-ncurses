@@ -62,6 +62,7 @@ void getDepartures(vector<Departure> &departures, const string &stopId) {
 }
 
 int main(int argc, char* argv[]) {
+	setlocale(LC_ALL, "de_DE.UTF-8");
 
 	string stopId = "de:8212:72";
 	string stopName = "Volkswohnungen";
