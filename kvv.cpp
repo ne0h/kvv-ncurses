@@ -7,6 +7,8 @@
 #include <ncurses.h>
 #include <unistd.h>
 
+#define DESTINATION_LENGTH 35
+
 using namespace std;
 
 struct Departure {
@@ -88,7 +90,10 @@ int main(int argc, char* argv[]) {
 		for (const auto &departure : departures) {
 			stringstream ss;
 			ss << departure.route.c_str() << "\t";
-			ss << departure.destination.c_str() << "\t\t";
+			ss << departure.destination.c_str();
+			for (unsigned int i = departure.destination.length(); i < DESTINATION_LENGTH; i++) {
+				ss << " ";
+			}
 			ss << departure.time.c_str();
 
 			mvprintw(i, 0, "%s", ss.str().c_str());
